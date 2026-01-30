@@ -1,9 +1,9 @@
 import java.time.LocalDate;
 
 public class Task {
-    String title;       //Opgavens titel
-    String description; //Opgavens beskrivelse
-    LocalDate dueDate;  //Deadline for opgaven
+    private String title;       //Opgavens titel
+    private String description; //Opgavens beskrivelse
+    private LocalDate dueDate;  //Deadline for opgaven
 
 
     public Task(String title, String description, LocalDate dueDate) {
@@ -20,4 +20,14 @@ public class Task {
 
     public LocalDate getDueDate() { return dueDate; }
     public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
+
+        @Override
+        public String toString() {
+            return """
+                   Titel: %s
+                   Beskrivelse: %s
+                   Deadline: %s
+                   """.formatted(title, description, dueDate)
+                    ;
+    }
 }
