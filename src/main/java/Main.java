@@ -1,9 +1,10 @@
 import java.time.LocalDate;
+import java.time.Month;
 
 public class Main {
     static void main() {
 
-       TaskList taskList = new TaskList();
+       TaskList <Task> taskList =TaskList.testData();
 
         System.out.println("Alle opgaver: ");
         taskList.taskByDueDate()
@@ -16,8 +17,8 @@ public class Main {
                 .forEach(System.out::println);
 
         System.out.println("--------------------------------");
-        System.out.println("Opgaver før given dato (hardcodet til dd):");
-        taskList.overdueTasks(LocalDate.of(2026, 1, 30))
+        System.out.println("Opgaver før i dag: ");
+        taskList.overdueTasks()
                 .forEach(System.out::println);
 
         System.out.println("--------------------------------");
@@ -25,7 +26,12 @@ public class Main {
         taskList.filterOnKeyWord()
                 .forEach(System.out::println);
 
-        System.out.println("-------------------------------");
+        System.out.println("--------------------------------");
+        System.out.println("Opgaver i marts: " );
+        taskList.tasksInMonth(Month.MARCH)
+                .forEach(System.out::println);
+
+ /*       System.out.println("-------------------------------");
         System.out.println("Sorteret på dato - den besværlige måde: ");
         taskList.taskByDueDate()
                 .forEach(task -> {
@@ -34,7 +40,7 @@ public class Main {
                     System.out.println("Beskrivelse: " + task.getDescription());
                     System.out.println("--__--__--__--__--__--__");
                 });
-
+*/
     }
 }
 

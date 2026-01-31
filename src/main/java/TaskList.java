@@ -3,65 +3,68 @@ import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 
-public class TaskList implements Iterable<Task> {
-    private List<Task> tasks = new ArrayList<>();
 
-    public void addTask(Task task) {
+public class TaskList<T extends Task> implements Iterable<T> {
+    private List<T> tasks = new ArrayList<>();
+
+    public void addTask(T task) {
         tasks.add(task);
     }
 
-    @SuppressWarnings("unchecked")
-    public TaskList() {
+    public static TaskList<Task> testData() {
+        TaskList<Task> taskList = new TaskList<>();
 
-        addTask(new Task("Rive blade sammen", "Riv sammen og put i poser til bladkamp",
+        taskList.addTask(new Task("Rive blade sammen", "Riv sammen og put i poser til bladkamp",
                 LocalDate.of(2026, 2, 28)));
-        addTask(new Task("Klargøre bede", "Vend jorden, fjern ukrudt",
+        taskList.addTask(new Task("Klargøre bede", "Vend jorden, fjern ukrudt",
                 LocalDate.of(2026, 3, 15)));
-        addTask(new Task("Beskære", "Skære døde grene af buskene overalt og gem til afbrænding",
+        taskList.addTask(new Task("Beskære", "Skære døde grene af buskene overalt og gem til afbrænding",
                 LocalDate.of(2026, 4, 24)));
-        addTask(new GardenTask("Grave fælder", "Til når svigerfamilien kommer på besøg",
+        taskList.addTask(new GardenTask("Grave fælder", "Til når svigerfamilien kommer på besøg",
                 LocalDate.of(2026, 2, 1), "Bedet bag skuret"));
-        addTask(new GardenTask("Trampolin", "Sætte trampolin op igen",
+        taskList.addTask(new GardenTask("Trampolin", "Sætte trampolin op igen",
                 LocalDate.of(2026, 2, 19), "Baghave"));
-        addTask(new GardenTask("Grave huller", "Vi skal have en skyttegrav i baghaven",
+        taskList.addTask(new GardenTask("Grave huller", "Vi skal have en skyttegrav i baghaven",
                 LocalDate.of(2026, 2, 17), "Hjørne bag terrasse"));
-        addTask(new Task("Installere katapult", "Vendes mod øst, mod bagboen",
+        taskList.addTask(new Task("Installere katapult", "Vendes mod øst, mod bagboen",
                 LocalDate.of(2026, 4, 25)));
-        addTask(new Task("Bunker", "Find ud af, hvor i haven bunkeren skal bygges",
+        taskList.addTask(new Task("Bunker", "Find ud af, hvor i haven bunkeren skal bygges",
                 LocalDate.of(2026, 2, 1)));
-        addTask(new Task("Klippe hæk", "Hele vejen rundt om verdens længste hæk",
+        taskList.addTask(new Task("Klippe hæk", "Hele vejen rundt om verdens længste hæk",
                 LocalDate.of(2025, 6, 20)));
-        addTask(new Task("Slå græsset", "Alle 2500 kvm",
+        taskList.addTask(new Task("Slå græsset", "Alle 2500 kvm",
                 LocalDate.of(2025, 6, 30)));
-        addTask(new GardenTask("Køb havetraktor", "Det bliver så sidste gang med en håndskubber",
+        taskList.addTask(new GardenTask("Køb havetraktor", "Det bliver så sidste gang med en håndskubber",
                 LocalDate.of(2025, 7, 1), "Bauhaus"));
+        return taskList;
     }
 
-        //Kører alle tasks - der er kun brug for en liste
-    public List<Task> taskByDueDate() {
-        return (List<Task>) tasks.stream()
-                .sorted(Comparator.comparing(Task::getDueDate))
+    //Kører alle tasks - der er kun brug for en liste
+    public List<T> taskByDueDate() {
+        return (List<T>) tasks.stream()
+                .sorted(Comparator.comparing(T::getDueDate))
                 .toList();
     }
 
 
-    public List<Task> tasksDueToday(LocalDate date) {
+    public List<T> tasksDueToday(LocalDate date) {
         return tasks.stream()
                 .filter(task -> task.getDueDate().equals(date))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
-    public List<Task> overdueTasks(LocalDate date) {
+    public List<Task> overdueTasks() {
         LocalDate today = LocalDate.now();
         return tasks.stream()
-                .filter(task -> task.getDueDate().isBefore(LocalDate.now()))
-                .collect(Collectors.toList());
+                .filter(task -> task.getDueDate().isBefore(today))
+                .collect(toList());
     }
 
 
-    String keyWord = "vi";
-   public List<Task> filterOnKeyWord() {
+    String keyWord = "klippe";
+    public List<T> filterOnKeyWord() {
         return tasks.stream()
                 .filter(task ->
                         task.getDescription().toLowerCase()
@@ -69,17 +72,20 @@ public class TaskList implements Iterable<Task> {
                 .toList();
     }
 
+        public List<T> tasksInMonth(Month month) { //Month fra java.time - ENUM
+        return tasks.stream()
+                .filter(task -> task.getDueDate()
+                        .getMonth().equals(month))
+                .toList();
+    }
 
     @Override
-    public Iterator<Task> iterator() {
+    public Iterator<T> iterator() {
         return tasks.iterator();
     }
 }
 
 
 
-    /*
 
-The class must be generic and accept any Task or subtype of Task. The class must also implement the Iterable interface to allow iterating over the tasks.
-     */
 
